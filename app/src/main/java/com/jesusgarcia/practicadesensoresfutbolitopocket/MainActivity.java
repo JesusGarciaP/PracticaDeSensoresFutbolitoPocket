@@ -14,43 +14,32 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView equipoA, equipoB, marcadorA, marcadorB;
-    ImageView pelota;
+    TextView equipoRealMadrid, equipoBarcelona, marcadorRealMadrid, marcadorBarcelona;
+    ImageView balon;
 
     SensorManager sensorManager;
     Sensor sensor;
     SensorEventListener sensorEventListener;
 
-
-    int ancho = 0, alto = 0, puntajeA = 0, puntajeB = 0;
-
-    /* DisplayMetrics permite describir información general sobre una pantalla, como su tamaño,
-     *  densidad y escala de fuentes. */
+    int ancho = 0, alto = 0, puntajeRealMadrid = 0, puntajeBarcelona = 0;
     DisplayMetrics metrics;
 
-    /**
-     * Método onCreate que carga todos los componentes de la aplicación y se encargara de detectar
-     * los cambios que percibe en movimiento del dispositivo con los sensores de aceleración y
-     * modificará la posición de la imagén del balón.
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        equipoA = findViewById(R.id.lblEquipoA);
-        equipoB = findViewById(R.id.lblEquipoB);
-        marcadorA = findViewById(R.id.lblMarcadorA);
-        marcadorB = findViewById(R.id.lblMarcadorB);
-        pelota = findViewById(R.id.imgPelota);
+        equipoRealMadrid = findViewById(R.id.lblRealMadrid);
+        equipoBarcelona = findViewById(R.id.lblBarcelona);
+        marcadorRealMadrid = findViewById(R.id.lblMarcadorRealMadrid);
+        marcadorBarcelona = findViewById(R.id.lblMarcadorBarcelona);
+        balon = findViewById(R.id.imgBalon);
 
         /* Obtenemos las medidas de la pantalla en que se está mostrando. */
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        ancho = metrics.widthPixels; // De las medidas extraídas, asigmanos el ancho total.
-        alto = metrics.heightPixels; // De las mediad extraídas, asignamos el alto total.
+        ancho = metrics.widthPixels;
+        alto = metrics.heightPixels;
 
         /* Invocamos el sensor de aceleración por defecto. */
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -76,43 +65,43 @@ public class MainActivity extends AppCompatActivity {
                 float z = event.values[2]; // Valores en el eje Z de movimiento.
 
                 if (x < (-1)) {
-                    if (pelota.getX() < (ancho - pelota.getWidth())) {
-                        pelota.setX(pelota.getX() + 5);
+                    if (balon.getX() < (ancho - balon.getWidth())) {
+                        balon.setX(balon.getX() + 5);
                     }
                 } else if (x > 1) {
-                    if (pelota.getX() > 1) {
-                        pelota.setX(pelota.getX() - 5);
+                    if (balon.getX() > 1) {
+                        balon.setX(balon.getX() - 5);
                     }
                 }
 
                 if (y < (-1)) {
-                    if (pelota.getY() > 0) {
-                        pelota.setY(pelota.getY() - 5);
+                    if (balon.getY() > 0) {
+                        balon.setY(balon.getY() - 5);
                     } else {
-                        if ((pelota.getX() > 400) && (pelota.getX() < 580)) {
+                        if ((balon.getX() > 400) && (balon.getX() < 580)) {
                             Gol();
-                            puntajeB++;
-                            marcadorB.setText(String.valueOf(puntajeB));
+                            puntajeBarcelona++;
+                            marcadorBarcelona.setText(String.valueOf(puntajeBarcelona));
                         }
                     }
                 } else if (y > 1) {
-                    if (pelota.getY() < ((ancho - pelota.getHeight()) + 625)) {
-                        pelota.setY(pelota.getY() + 5);
+                    if (balon.getY() < ((ancho - balon.getHeight()) + 625)) {
+                        balon.setY(balon.getY() + 5);
                     } else {
-                        if ((pelota.getX() > 400) && (pelota.getX() < 580)) {
+                        if ((balon.getX() > 400) && (balon.getX() < 580)) {
                             Gol();
-                            puntajeA++;
-                            marcadorA.setText(String.valueOf(puntajeA));
+                            puntajeRealMadrid++;
+                            marcadorRealMadrid.setText(String.valueOf(puntajeRealMadrid));
                         }
                     }
                 }
 
                 if (z < (-1)) {
-                    pelota.setMaxWidth(100);
-                    pelota.setMaxHeight(100);
+                    balon.setMaxWidth(100);
+                    balon.setMaxHeight(100);
                 } else if (z > 1) {
-                    pelota.setMaxWidth(100);
-                    pelota.setMaxHeight(100);
+                    balon.setMaxWidth(100);
+                    balon.setMaxHeight(100);
                 }
             }
 
@@ -134,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
      * Cuando se realiza un Gol, el balón vuelve a la posición de inicio (al centro de la pantalla).
      */
     private void Gol() {
-        pelota.setX(540);
-        pelota.setY(888);
+        balon.setX(540);
+        balon.setY(888);
     }
 
     @Override
@@ -164,9 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 sensor,
                 sensorManager.SENSOR_DELAY_FASTEST
         );
-
         super.onResume();
-
         Gol();
     }
 }
